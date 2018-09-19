@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head><meta charset="utf8"></head>
+<body>
+<button id='toggleButton' onclick="toggle()">Start Working</button>
+<div id='heartbeat'></div>
+<script>
+    const toggleButton = document.getElementById('toggleButton');
+    const heartbeat = document.getElementById('heartbeat');
+    var intervalID;
+    var sum = 0;
+    function toggle() {
+        if (intervalID) {
+            toggleButton.textContent = "Start Working";
+            clearInterval(intervalID);
+            intervalID = undefined;
+            return;
+        }
+
+        toggleButton.textContent = "Stop Working";
+        intervalID = setInterval(function() {
+            for (var i = 0; i < 100000; i++) {
+                sum += .1;
+                sum = Math.sin(sum);
+            }
+            var str = heartbeat.textContent;
+            if (str.length >= 200)
+                str = '';
+            str += '.';
+            heartbeat.textContent = str;
+        }, 10);
+    }
+</script>
+</body>
+</html>
