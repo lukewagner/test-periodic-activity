@@ -2,26 +2,39 @@
 <html>
 <head><meta charset="utf8"></head>
 <body>
-<button id='toggleButton' onclick="toggle()">Start Working</button>
+<button id='toggleWork' onclick="toggleWork()">Start Working</button>
+<button id='toggleDOM' onclick="toggleDOM()">Include Nested DOM Calls</button>
 <div id='heartbeat'></div>
 <script>
-    const toggleButton = document.getElementById('toggleButton');
+    const toggleWorkButton = document.getElementById('toggleWork');
+    const toggleDOMButton = document.getElementById('toggleDOM');
     const heartbeat = document.getElementById('heartbeat');
+
     var intervalID;
     var sum = 0;
-    function toggle() {
+    var dom = false;
+    function toggleWork() {
         if (intervalID) {
-            toggleButton.textContent = "Start Working";
+            toggleWorkButton.textContent = "Start Working";
             clearInterval(intervalID);
             intervalID = undefined;
             return;
         }
 
-        toggleButton.textContent = "Stop Working";
+        toggleWorkButton.textContent = "Stop Working";
         intervalID = setInterval(function() {
-            for (var i = 0; i < 100000; i++) {
-                sum += .1;
-                sum = Math.sin(sum);
+            if (dom) {
+                for (var i = 0; i < 10; i++) {
+                    var d = document.createDocumentFragment();
+                    for (var j = 0; j < 1000; j++) {
+                        d.appendChild(document.createElement('div'));
+                    }
+                }
+            } else {
+                for (var i = 0; i < 100000; i++) {
+                    sum += .1;
+                    sum = Math.sin(sum);
+                }
             }
             var str = heartbeat.textContent;
             if (str.length >= 200)
@@ -29,6 +42,17 @@
             str += '.';
             heartbeat.textContent = str;
         }, 10);
+    }
+
+    function toggleDOM() {
+        if (dom) {
+            toggleDOMButton.textContent = "No Nested DOM Calls";
+            dom = false;
+            return;
+        }
+
+        toggleDOMButton.textContent = "Include Nested DOM Calls";
+        dom = true;
     }
 </script>
 </body>
